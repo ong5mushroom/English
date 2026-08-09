@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGLISH KIDS MASTER - Tiếng Anh Lớp 2</title>
+    <style>
+        /* CSS GIAO DIỆN TRẺ EM (CANDY STYLE) */
+        body { font-family: 'Fredoka', 'Comic Sans MS', 'Segoe UI', sans-serif; background-color: #f7f1e3; text-align: center; margin: 0; padding: 10px; color: #2d3436; }
+        .container { max-width: 800px; margin: auto; background: #ffffff; padding: 20px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); position: relative; border: 4px solid #fabca1;}
+        
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px dashed #fabca1; padding-bottom: 10px; margin-bottom: 15px;}
+        .header-title h1 { color: #ff5252; margin: 0; font-size: 26px; text-shadow: 1px 1px 0px #ffb142;}
+        .subtitle { color: #70a1ff; margin: 3px 0 0 0; font-size: 14px; font-weight: bold;}
+        
+        /* BẢNG TÍCH SAO THƯỞNG */
+        .star-badge { background: #ffeaa7; padding: 8px 15px; border-radius: 25px; border: 2px solid #fdcb6e; font-size: 18px; font-weight: bold; color: #d63031; display: flex; align-items: center; gap: 5px;}
+        
+        .section { display: none; padding: 15px; border-radius: 15px; margin-top: 15px; background: #f1f2f6; }
+        .active { display: block; }
+        
+        .menu-bar { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 15px; }
+        .tab-btn { font-size: 14px; padding: 10px 12px; border-radius: 12px; border: none; cursor: pointer; color: white; background-color: #70a1ff; font-weight: bold; transition: 0.2s; flex-grow: 1; max-width: 120px; box-shadow: 0 4px 0 #1e90ff;}
+        .tab-btn:active { transform: translateY(4px); box-shadow: none; }
+        .tab-btn.active-tab { background-color: #ff4757; box-shadow: 0 4px 0 #2ed573; }
+        .tab-vip { background-color: #ff9f43; box-shadow: 0 4px 0 #e17055; animation: pulse 1.5s infinite;}
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+
+        button.action-btn { font-size: 16px; padding: 12px 20px; border-radius: 12px; border: none; cursor: pointer; color: white; background-color: #2ed573; font-weight: bold; box-shadow: 0 4px 0 #26af5f; margin: 5px;}
+        button.action-btn:active { transform: translateY(4px); box-shadow: none; }
+        
+        .btn-mic { background-color: #ff6b81; font-size: 30px; border-radius: 50%; width: 75px; height: 75px; margin-top: 10px; border: 4px solid white; box-shadow: 0 6px 15px rgba(255, 107, 129, 0.4); cursor: pointer;}
+        
+        /* KHUNG HÌNH ẢNH EMOJI LỚN */
+        .emoji-card { font-size: 90px; margin: 10px 0; animation: bounce 2s infinite; display: inline-block;}
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .word-display { font-size: 38px; font-weight: bold; color: #ff4757; letter-spacing: 2px; margin: 5px 0;}
+        .meaning-display { font-size: 22px; color: #2f3542; font-weight: bold; }
+        
+        .write-sentence { font-size: 24px; margin: 15px 0; font-weight: bold; color: #1e90ff;}
+        input[type="text"].word-input { font-size: 24px; padding: 8px; width: 140px; border: 3px solid #70a1ff; border-radius: 10px; text-align: center; color: #ff4757; font-weight: bold; background: #fff;}
+        
+        .feedback { font-size: 18px; font-weight: bold; margin-top: 10px; min-height: 30px; color: #2ed573;}
+        
+        /* KHUNG GAME BẮN BÓNG & NỐI TỪ */
+        #game-area { position: relative; width: 100%; height: 320px; background: #a4b0be; border-radius: 15px; overflow: hidden; margin-top: 10px; border: 3px solid #747d8c;}
+        .bubble { position: absolute; min-width: 70px; padding: 5px 12px; height: 50px; border-radius: 25px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 28px; cursor: pointer; border: 3px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.2); background: #ffffff; }
+        
+        .matching-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+        .card { background-color: #1e90ff; color: white; font-size: 20px; font-weight: bold; padding: 10px; border-radius: 10px; cursor: pointer; min-height: 65px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 0 #0066cc;}
+        .card.selected { background-color: #ffa502; box-shadow: 0 4px 0 #eccc68;}
+        .card.matched { background-color: #2ed573; opacity: 0.5; pointer-events: none; box-shadow: none;}
+
+        /* KHUNG NẠP BÀI (DÀNH CHO PHỤ HUYNH) */
+        textarea { width: 100%; padding: 12px; font-size: 14px; border: 2px solid #a4b0be; border-radius: 10px; box-sizing: border-box; font-family: monospace; resize: vertical;}
+
+        /* HỆ THỐNG TOAST & MODAL VIP */
+        #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 15px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 15px; box-shadow: 0px 4px 10px rgba(0,0,0,0.3); transition: 0.3s ease-in-out; opacity: 0; font-weight: bold;}
+        #toast.show { visibility: visible; bottom: 50px; opacity: 1;}
+        #toast.error { background-color: #ff4757; }
+        #toast.success { background-color: #2ed573; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box;}
+        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; border: 4px solid #ff9f43;}
+        .vip-input { font-size: 18px; padding: 12px; width: 80%; border: 3px solid #ff9f43; border-radius: 10px; text-align: center; font-weight: bold; text-transform: uppercase; margin-bottom: 15px;}
+
+        /* DÙNG CHO MOBILE */
+        @media (max-width: 600px) {
+            .matching-board { grid-template-columns: repeat(2, 1fr); }
+            .emoji-card { font-size: 70px; }
+            .word-display { font-size: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="toast">Thông báo</div>
+
+<!-- CỬA SỔ YÊU CẦU MÃ BẢN QUYỀN -->
+<div id="vip-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 style="color: #ff4757; margin-top: 0;">👑 KÍCH HOẠT BẢN QUYỀN PRO</h2>
+        <p style="font-weight: bold; color: #2f3542; font-size: 14px;">Tính năng "Nạp bài học riêng" chỉ dành cho thành viên VIP.</p>
+        <p style="color: #636e72; font-size: 13px;">Vui lòng nhập mã kích hoạt bạn đã mua để mở khóa trọn đời.</p>
+        <input type="text" id="vip-code" class="vip-input" placeholder="Nhập mã (VD: ONG5-PRO...)">
+        <br>
+        <button class="action-btn" style="background: #ffa502;" onclick="activateVIP()">XÁC NHẬN MÃ</button>
+        <button class="action-btn" style="background: #a4b0be;" onclick="closeVIPModal()">Đóng lại</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="header">
+        <div class="header-title">
+            <h1>🇬🇧 ENGLISH KIDS</h1>
+            <p class="subtitle">Tiếng Anh Vui Nhộn - Lớp 2</p>
+        </div>
+        <div class="star-badge">
+            ⭐ <span id="star-count">0</span>
+        </div>
+    </div>
+    
+    <div class="menu-bar">
+        <button class="tab-btn active-tab" onclick="checkVIPAccess('topic-section', this)">📚 Chủ Đề</button>
+        <button class="tab-btn" onclick="checkVIPAccess('learn-section', this)">🎨 Học Từ</button>
+        <button class="tab-btn" onclick="checkVIPAccess('write-section', this)">✏️ Điền Chữ</button>
+        <button class="tab-btn" onclick="checkVIPAccess('game-section', this)">🎈 Bắn Bóng</button>
+        <button class="tab-btn" onclick="checkVIPAccess('match-section', this)">🃏 Nối Thẻ</button>
+        <!-- Nút Nạp Từ Mới (Có khóa VIP) -->
+        <button class="tab-btn tab-vip" id="tab-admin" onclick="checkVIPAccess('admin-section', this)">📥 Nạp Từ Mới 👑</button>
+    </div>
+
+    <!-- KHUNG CHỌN 7 CHỦ ĐỀ CÓ SẴN (MIỄN PHÍ) -->
+    <div id="topic-section" class="section active">
+        <h2 style="color: #ff4757; margin-top: 0;">🎈 Chọn Chủ Đề Học</h2>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button class="action-btn" style="background: #ff6b81;" onclick="selectTopic('family')">👨‍👩‍👧 Family (Gia đình)</button>
+            <button class="action-btn" style="background: #1e90ff;" onclick="selectTopic('school')">🎒 School (Trường học)</button>
+            <button class="action-btn" style="background: #2ed573;" onclick="selectTopic('colors')">🎨 Colors (Màu sắc)</button>
+            <button class="action-btn" style="background: #ffa502;" onclick="selectTopic('animals')">🐶 Animals (Con vật)</button>
+            <button class="action-btn" style="background: #a4b0be;" onclick="selectTopic('numbers')">🔢 Numbers (Số đếm)</button>
+            <button class="action-btn" style="background: #ff4757;" onclick="selectTopic('body')">🖐️ Body (Cơ thể)</button>
+            <button class="action-btn" style="background: #eccc68; color: #2f3542;" onclick="selectTopic('food')">🍔 Food (Đồ ăn)</button>
+        </div>
+    </div>
+
+    <!-- KHUNG NẠP BÀI (DÀNH CHO PHỤ HUYNH VIP) -->
+    <div id="admin-section" class="section">
+        <h2 style="color: #ff9f43; margin-top: 0;">👑 Nạp Giáo Án Riêng Của Bé</h2>
+        <p style="color: #636e72; text-align: left; font-size: 14px;">
+            <b>Mẹo:</b> Phụ huynh copy câu này gửi cho AI (ChatGPT/Gemini) để tạo bảng từ đang học trên lớp:<br>
+            <i style="color: #1e90ff;">"Soạn bảng 10 từ tiếng Anh lớp 2. Trả về bảng 5 cột: Từ Tiếng Anh | Emoji | Nghĩa VN | Câu ví dụ | Nghĩa câu."</i>
+        </p>
+        
+        <div style="margin-bottom: 20px; text-align: left;">
+            <textarea id="input-data" rows="7" placeholder="Dán bảng giáo án copy từ AI, Word hoặc Excel vào đây...
+
+Ví dụ một dòng hợp lệ:
+pencil	✏️	Cái bút chì	It is a pencil.	Đây là cái bút chì."></textarea>
+        </div>
+        
+        <button style="background-color: #2ed573; font-size: 16px; width: 100%; padding: 12px; font-weight: bold; color: white; border-radius: 12px; border: none;" onclick="loadLessonFromTable()">⚡ XỬ LÝ DỮ LIỆU & HỌC NGAY</button>
+    </div>
+
+    <div id="learn-section" class="section">
+        <div id="current-emoji" class="emoji-card">👨</div>
+        <div id="current-word" class="word-display">FATHER</div>
+        <div id="current-meaning" class="meaning-display">(Bố)</div>
+        
+        <div style="margin: 15px 0;">
+            <button class="action-btn" onclick="speakEnglish(currentWordText)">🔊 Nghe Mẫu</button>
+            <button class="action-btn" style="background: #ffa502;" onclick="speakEnglish(currentSentenceText)">🔊 Nghe Câu</button>
+        </div>
+
+        <div style="background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+            <span style="color: #70a1ff; font-weight: bold;">Câu mẫu: </span>
+            <span id="current-sentence" style="font-size: 18px; font-weight: bold; color: #2f3542;">This is my father.</span>
+        </div>
+
+        <div>
+            <p style="font-weight: bold; margin: 5px 0;">Bấm Mic và đọc to từ tiếng Anh nhé:</p>
+            <button class="btn-mic" onclick="checkPronunciation()">🎤</button>
+            <div id="voice-feedback" class="feedback"></div>
+        </div>
+    </div>
+
+    <div id="write-section" class="section">
+        <h3 style="color: #ff4757; margin-top: 0;">✏️ Nhìn Hình & Gõ Từ</h3>
+        <div id="write-emoji" class="emoji-card">👨</div>
+        <p class="meaning-display" id="write-meaning-hint">(Bố)</p>
+        
+        <div class="write-sentence" id="sentence-input-area"></div>
+        <div id="write-feedback" class="feedback"></div>
+    </div>
+
+    <div id="game-section" class="section">
+        <h3 style="color: #ff4757; margin-top: 0;">🎈 Bắn Bóng Hình Ảnh</h3>
+        <p style="font-size: 18px; font-weight: bold; margin: 5px 0;">
+            Hãy chọn bóng có hình: <b id="cannon-hint" style="color:#1e90ff; text-transform: uppercase;">FATHER</b>
+        </p>
+
+        <div id="game-area">
+            <div id="bubbles-container"></div>
+        </div>
+        <div id="game-feedback" class="feedback"></div>
+    </div>
+
+    <div id="match-section" class="section">
+        <h3 style="color: #ff4757; margin-top: 0;">🃏 Tìm Cặp Trùng Nhau</h3>
+        <div id="match-board" class="matching-board"></div>
+        <div id="match-feedback" class="feedback"></div>
+    </div>
+</div>
+
+<script>
+    // TOAST MESSAGE
+    let toastTimeout;
+    function showToast(msg, type = "success") {
+        let toast = document.getElementById("toast");
+        toast.innerHTML = msg;
+        toast.className = "show " + type;
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    // BỘ DỮ LIỆU TỪ VỰNG CHUẨN LỚP 2
+    const topicData = {
+        family: [
+            { word: "father", emoji: "👨", vi: "Bố / Ba", sentence: "This is my father." },
+            { word: "mother", emoji: "👩", vi: "Mẹ", sentence: "This is my mother." },
+            { word: "brother", emoji: "👦", vi: "Anh / Em trai", sentence: "This is my brother." },
+            { word: "sister", emoji: "👧", vi: "Chị / Em gái", sentence: "This is my sister." }
+        ],
+        school: [
+            { word: "pen", emoji: "🖊️", vi: "Cái bút mực", sentence: "What is this? It's a pen." },
+            { word: "pencil", emoji: "✏️", vi: "Cái bút chì", sentence: "What is this? It's a pencil." },
+            { word: "book", emoji: "📘", vi: "Quyển sách", sentence: "What is this? It's a book." },
+            { word: "eraser", emoji: "🧽", vi: "Cục tẩy", sentence: "What is this? It's an eraser." }
+        ],
+        colors: [
+            { word: "red", emoji: "🔴", vi: "Màu đỏ", sentence: "It is red." },
+            { word: "blue", emoji: "🔵", vi: "Màu xanh dương", sentence: "It is blue." },
+            { word: "green", emoji: "🟢", vi: "Màu xanh lá", sentence: "It is green." },
+            { word: "yellow", emoji: "🟡", vi: "Màu vàng", sentence: "It is yellow." }
+        ],
+        animals: [
+            { word: "dog", emoji: "🐶", vi: "Con chó", sentence: "What is this? It's a dog." },
+            { word: "cat", emoji: "🐱", vi: "Con mèo", sentence: "What is this? It's a cat." },
+            { word: "duck", emoji: "🦆", vi: "Con vịt", sentence: "What is this? It's a duck." },
+            { word: "bird", emoji: "🐦", vi: "Con chim", sentence: "What is this? It's a bird." }
+        ],
+        numbers: [
+            { word: "one", emoji: "1️⃣", vi: "Số 1", sentence: "How many? One." },
+            { word: "two", emoji: "2️⃣", vi: "Số 2", sentence: "How many? Two." },
+            { word: "three", emoji: "3️⃣", vi: "Số 3", sentence: "How many? Three." },
+            { word: "four", emoji: "4️⃣", vi: "Số 4", sentence: "How many? Four." },
+            { word: "five", emoji: "5️⃣", vi: "Số 5", sentence: "How many? Five." }
+        ],
+        body: [
+            { word: "face", emoji: "🧒", vi: "Khuôn mặt", sentence: "This is my face." },
+            { word: "hand", emoji: "🖐️", vi: "Bàn tay", sentence: "This is my hand." },
+            { word: "leg", emoji: "🦵", vi: "Cái chân", sentence: "This is my leg." },
+            { word: "ear", emoji: "👂", vi: "Cái tai", sentence: "This is my ear." }
+        ],
+        food: [
+            { word: "milk", emoji: "🥛", vi: "Sữa tươi", sentence: "I like milk." },
+            { word: "bread", emoji: "🍞", vi: "Bánh mì", sentence: "I like bread." },
+            { word: "juice", emoji: "🧃", vi: "Nước ép", sentence: "I like juice." },
+            { word: "apple", emoji: "🍎", vi: "Quả táo", sentence: "I like apples." }
+        ]
+    };
+
+    let currentVocabList = topicData.family;
+    let currentIndex = 0;
+    let stars = parseInt(localStorage.getItem('kidsEnglishStars')) || 0;
+    let speechRecognizer = null;
+
+    let currentWordText = "";
+    let currentEmojiText = "";
+    let currentMeaningText = "";
+    let currentSentenceText = "";
+
+    document.getElementById("star-count").innerText = stars;
+
+    function addStars(num) {
+        stars += num;
+        document.getElementById("star-count").innerText = stars;
+        localStorage.setItem('kidsEnglishStars', stars);
+    }
+
+    // === HỆ THỐNG BẢN QUYỀN VIP ===
+    // Bạn có thể thêm các mã kích hoạt mới vào mảng này
+    const VALID_VIP_KEYS = ["ONG5-PRO-2026", "KIDS-VIP-999"];
+
+    function checkVIPAccess(sectionId, btnElement) {
+        if (sectionId === 'admin-section') {
+            let isVIP = localStorage.getItem('englishKidsVIP');
+            if (isVIP !== 'true') {
+                document.getElementById('vip-modal').style.display = 'flex';
+                return; // Chặn không cho mở Tab Admin
+            }
+        }
+        showSection(sectionId, btnElement);
+    }
+
+    function activateVIP() {
+        let inputCode = document.getElementById('vip-code').value.trim().toUpperCase();
+        if (VALID_VIP_KEYS.includes(inputCode)) {
+            localStorage.setItem('englishKidsVIP', 'true');
+            document.getElementById('vip-modal').style.display = 'none';
+            showToast('👑 Kích hoạt tài khoản PRO thành công!', 'success');
+            
+            // Xóa hiệu ứng rung của nút VIP
+            document.getElementById('tab-admin').classList.remove('tab-vip');
+            document.getElementById('tab-admin').innerText = '📥 Nạp Từ Mới';
+            
+            showSection('admin-section', document.getElementById('tab-admin'));
+        } else {
+            showToast('❌ Mã kích hoạt không chính xác!', 'error');
+        }
+    }
+
+    function closeVIPModal() {
+        document.getElementById('vip-modal').style.display = 'none';
+    }
+
+    // Tự động bỏ hiệu ứng rung nếu đã là VIP
+    if (localStorage.getItem('englishKidsVIP') === 'true') {
+        document.getElementById('tab-admin').classList.remove('tab-vip');
+        document.getElementById('tab-admin').innerText = '📥 Nạp Từ Mới';
+    }
+    // ===============================
+
+    function selectTopic(topicKey) {
+        currentVocabList = topicData[topicKey];
+        currentIndex = 0;
+        loadCurrentWord();
+        showSection('learn-section', document.querySelectorAll('.tab-btn')[1]);
+    }
+
+    function showSection(sectionId, btnElement) {
+        // Chỉ cho phép vào các thẻ game nếu đã có dữ liệu từ vựng
+        if (sectionId !== 'topic-section' && sectionId !== 'admin-section' && currentVocabList.length === 0) {
+            showToast("Vui lòng chọn chủ đề hoặc nạp bài trước nhé!", "error");
+            return;
+        }
+
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+        
+        if (btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+            btnElement.classList.add('active-tab');
+        }
+
+        if (sectionId === 'game-section') generateBubbles();
+        if (sectionId === 'match-section') initMatchingGame();
+    }
+
+    // === HÀM PHÂN TÍCH BẢNG CỦA PHỤ HUYNH ===
+    function loadLessonFromTable() {
+        const rawData = document.getElementById("input-data").value.trim();
+        if (!rawData) { 
+            showToast("❌ Mẹ/Ba chưa dán dữ liệu vào ô trống kìa!", "error"); 
+            return; 
+        }
+
+        const lines = rawData.split('\n');
+        let tempVocabList = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            if(lines[i].trim() === "") continue;
+            let parts = lines[i].split(/\t|\|/);
+            
+            if (parts.length >= 5) {
+                // Bỏ qua dòng tiêu đề
+                if(parts[0].toLowerCase().includes("tiếng anh") || parts[1].toLowerCase().includes("emoji")) continue;
+                
+                tempVocabList.push({
+                    word: parts[0].trim().toLowerCase(),
+                    emoji: parts[1].trim(),
+                    vi: parts[2].trim(),
+                    sentence: parts[3].trim()
+                });
+            }
+        }
+
+        if (tempVocabList.length === 0) {
+            showToast("❌ Không đọc được bảng! Vui lòng copy đúng bảng 5 cột.", "error");
+            return;
+        }
+
+        currentVocabList = tempVocabList;
+        showToast(`✅ Đã nạp thành công ${currentVocabList.length} từ mới cho bé!`, "success");
+        currentIndex = 0;
+        loadCurrentWord();
+        showSection('learn-section', document.querySelectorAll('.tab-btn')[1]);
+    }
+
+    function loadCurrentWord() {
+        if (!currentVocabList || currentVocabList.length === 0) return;
+        let item = currentVocabList[currentIndex];
+        currentWordText = item.word;
+        currentEmojiText = item.emoji;
+        currentMeaningText = item.vi;
+        currentSentenceText = item.sentence;
+
+        // Thẻ Học
+        document.getElementById("current-emoji").innerText = currentEmojiText;
+        document.getElementById("current-word").innerText = currentWordText.toUpperCase();
+        document.getElementById("current-meaning").innerText = "(" + currentMeaningText + ")";
+        document.getElementById("current-sentence").innerText = currentSentenceText;
+        document.getElementById("voice-feedback").innerText = "";
+
+        // Thẻ Viết
+        document.getElementById("write-emoji").innerText = currentEmojiText;
+        document.getElementById("write-meaning-hint").innerText = "(" + currentMeaningText + ")";
+        document.getElementById("write-feedback").innerText = "";
+        
+        let sentenceHTML = 'Gõ từ: <input type="text" id="write-input" class="word-input" autocomplete="off" onkeyup="checkWriting()">';
+        document.getElementById("sentence-input-area").innerHTML = sentenceHTML;
+
+        // Thẻ Bắn Bóng
+        document.getElementById("cannon-hint").innerText = currentWordText.toUpperCase();
+        document.getElementById("game-feedback").innerText = "";
+    }
+
+    // ĐỌC TIẾNG ANH (TTS - US English)
+    function speakEnglish(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            let utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.8; 
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    // NHẬN DIỆN GIỌNG NÓI TIẾNG ANH
+    function checkPronunciation() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) { alert("Trình duyệt không hỗ trợ Mic!"); return; }
+
+        if (!speechRecognizer) {
+            speechRecognizer = new SpeechRecognition();
+            speechRecognizer.lang = 'en-US';
+            speechRecognizer.continuous = false;
+
+            speechRecognizer.onresult = function(event) {
+                let spoken = event.results[0][0].transcript.toLowerCase();
+                let feedbackEl = document.getElementById("voice-feedback");
+
+                if (spoken.includes(currentWordText)) {
+                    feedbackEl.innerHTML = "Bé đọc giỏi quá! ⭐ +1";
+                    feedbackEl.style.color = "#2ed573";
+                    addStars(1);
+                    speakEnglish("Great job!");
+                    setTimeout(nextWord, 1500);
+                } else {
+                    feedbackEl.innerHTML = `Thử lại nào! (Máy nghe: ${spoken})`;
+                    feedbackEl.style.color = "#ff4757";
+                }
+            };
+        }
+
+        document.getElementById("voice-feedback").innerText = "Đang nghe... Bé đọc đi nào!";
+        try { speechRecognizer.start(); } catch(e) {}
+    }
+
+    // KIỂM TRA VIẾT CHỮ
+    function checkWriting() {
+        let inputVal = document.getElementById("write-input").value.toLowerCase().trim();
+        let feedbackEl = document.getElementById("write-feedback");
+
+        if (inputVal === currentWordText) {
+            feedbackEl.innerHTML = "Đúng rồi! Xuất sắc! ⭐ +1";
+            feedbackEl.style.color = "#2ed573";
+            addStars(1);
+            speakEnglish(currentWordText);
+            setTimeout(nextWord, 1500);
+        }
+    }
+
+    function nextWord() {
+        if (currentIndex < currentVocabList.length - 1) {
+            currentIndex++;
+        } else {
+            currentIndex = 0;
+            showToast("Tuyệt vời! Bé đã học xong bộ từ vựng này rồi!", "success");
+        }
+        loadCurrentWord();
+        if (document.getElementById('game-section').classList.contains('active')) generateBubbles();
+    }
+
+    // GAME BẮN BÓNG BẰNG EMOJI
+    function generateBubbles() {
+        let container = document.getElementById("bubbles-container");
+        container.innerHTML = "";
+
+        let choices = [currentEmojiText];
+        let others = currentVocabList.filter(i => i.emoji !== currentEmojiText).map(i => i.emoji);
+        others.sort(() => 0.5 - Math.random());
+        
+        if (others[0]) choices.push(others[0]);
+        if (others[1]) choices.push(others[1]);
+        choices.sort(() => 0.5 - Math.random());
+
+        let positions = [{top: 40, left: 15}, {top: 140, left: 45}, {top: 70, left: 75}];
+
+        choices.forEach((emoji, idx) => {
+            let pos = positions[idx % 3];
+            let bubble = document.createElement("div");
+            bubble.className = "bubble";
+            bubble.style.top = pos.top + "px";
+            bubble.style.left = pos.left + "%";
+            bubble.innerText = emoji;
+            bubble.onclick = function() {
+                if (emoji === currentEmojiText) {
+                    document.getElementById("game-feedback").innerHTML = "Bùm! Đúng rồi! ⭐ +1";
+                    addStars(1);
+                    speakEnglish(currentWordText);
+                    setTimeout(nextWord, 1200);
+                } else {
+                    document.getElementById("game-feedback").innerText = "Chưa đúng rồi, chọn lại nào!";
+                }
+            };
+            container.appendChild(bubble);
+        });
+    }
+
+    // GAME NỐI THẺ
+    let selectedCards = [];
+    function initMatchingGame() {
+        let board = document.getElementById("match-board");
+        board.innerHTML = "";
+        selectedCards = [];
+
+        let cardsData = [];
+        let shuffled = [...currentVocabList].sort(() => 0.5 - Math.random()).slice(0, 4);
+
+        shuffled.forEach((item, index) => {
+            cardsData.push({ text: item.emoji, type: 'emoji', id: index, word: item.word });
+            cardsData.push({ text: item.word.toUpperCase(), type: 'word', id: index, word: item.word });
+        });
+        cardsData.sort(() => 0.5 - Math.random());
+
+        cardsData.forEach(card => {
+            let cardEl = document.createElement("div");
+            cardEl.className = "card";
+            cardEl.innerText = card.text;
+            cardEl.onclick = function() {
+                if (cardEl.classList.contains("selected") || cardEl.classList.contains("matched") || selectedCards.length >= 2) return;
+                
+                cardEl.classList.add("selected");
+                if (card.type === 'word') speakEnglish(card.word);
+                selectedCards.push({ element: cardEl, id: card.id, type: card.type });
+
+                if (selectedCards.length === 2) {
+                    let c1 = selectedCards[0];
+                    let c2 = selectedCards[1];
+
+                    if (c1.id === c2.id && c1.type !== c2.type) {
+                        setTimeout(() => {
+                            c1.element.classList.add("matched");
+                            c2.element.classList.add("matched");
+                            addStars(1);
+                            selectedCards = [];
+                        }, 400);
+                    } else {
+                        setTimeout(() => {
+                            c1.element.classList.remove("selected");
+                            c2.element.classList.remove("selected");
+                            selectedCards = [];
+                        }, 800);
+                    }
+                }
+            };
+            board.appendChild(cardEl);
+        });
+    }
+
+    // Khởi chạy mặc định
+    loadCurrentWord();
+</script>
+</body>
+</html>
